@@ -5,7 +5,8 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@styles/*": ["src/styles/*"],
-      "@pages/*": ["src/pages/*"]
+      "@pages/*": ["src/pages/*"],
+      "@libs/*": ["src/libs/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,
