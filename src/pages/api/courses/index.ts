@@ -3,7 +3,7 @@ import prisma from "@libs/prisma"
 import { Prisma } from "@prisma/client"
 
 interface IncomingAPIRequest extends Omit<NextApiRequest, "method"> {
-  method: "POST"
+  method: "POST" | "GET"
 }
 
 export default async function handler(
@@ -11,6 +11,16 @@ export default async function handler(
   res: NextApiResponse
 ) {
   switch (req.method) {
+    case "GET":
+      try {
+        const courses = await prisma.course.findMany()
+        return res.status(200).json(courses)
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          console.log("code: ", e.code, "message: ", e.message)
+          return res.status(500).end()
+        }
+      }
     case "POST":
       const name = req.body.name
 
@@ -23,5 +33,7 @@ export default async function handler(
           return res.status(500).end()
         }
       }
+    default:
+      return res.status(405).end()
   }
 }
