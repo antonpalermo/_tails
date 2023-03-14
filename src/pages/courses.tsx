@@ -1,9 +1,11 @@
 import { Course } from "@prisma/client"
+import { useRouter } from "next/router"
 import useSWR from "swr"
 
 const fetcher = (key: string) => fetch(key).then(req => req.json())
 
 export default function Courses() {
+  const router = useRouter()
   const { data, isLoading, mutate } = useSWR<Course[]>("/api/courses", fetcher)
 
   async function createNewCourse() {
@@ -15,6 +17,12 @@ export default function Courses() {
 
     const course = await req.json()
     mutate([...data, course])
+    navigate(course.id)
+  }
+
+  function navigate(id: string) {
+    window.sessionStorage.setItem("current", JSON.stringify(id))
+    router.push(`/edit/${id}`)
   }
 
   if (isLoading) {
@@ -28,7 +36,7 @@ export default function Courses() {
       {data.map(course => (
         <div key={course.id}>
           <h2>{course.name}</h2>
-          <button>edit</button>
+          <button onClick={() => navigate(course.id)}>edit</button>
         </div>
       ))}
     </div>
