@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import prisma from "@libs/prisma"
 import { Prisma } from "@prisma/client"
+import parseBoolean from "@utils/parseBoolean"
 
 interface IncomingAPIRequest extends Omit<NextApiRequest, "method"> {
   method: "POST" | "GET"
@@ -13,7 +14,7 @@ export default async function handler(
   switch (req.method) {
     case "GET":
       try {
-        const published = req.query.published === "true" ? true : false
+        const published = parseBoolean(req.query.published as string)
 
         // only get courses that are published
         const courses = await prisma.course.findMany({ where: { published } })
