@@ -12,20 +12,22 @@ export default function Courses() {
     return <h1>loading...</h1>
   }
 
-  function editCourse(cid: string) {
-    router.push({
-      pathname: `${router.pathname}/drafts/[cid]`,
-      query: { cid }
-    })
-  }
-
   return (
     <div>
       <h1>Courses</h1>
       {data.map(course => (
         <div key={course.id}>
           {JSON.stringify(course)}
-          <button onClick={() => editCourse(course.id)}>edit</button>
+          <button
+            onClick={() =>
+              router.push({
+                pathname: "/drafts/[cid]",
+                query: { cid: course.id }
+              })
+            }
+          >
+            edit
+          </button>
         </div>
       ))}
     </div>
