@@ -13,6 +13,7 @@ datasource db {
 model Course {
   id          String   @id @unique @default(cuid())
   name        String
+  published   Boolean  @default(false)
   dateCreated DateTime @default(now())
   dateUpdated DateTime @updatedAt
 
