@@ -13,26 +13,32 @@ export default async function handler(
   switch (req.method) {
     case "GET":
       try {
-        const courses = await prisma.course.findMany()
+        const published = req.query.published === "true" ? true : false
+
+        // only get courses that are published
+        const courses = await prisma.course.findMany({ where: { published } })
+
         return res.status(200).json(courses)
       } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           console.log("code: ", e.code, "message: ", e.message)
-          return res.status(500).end()
         }
+        return res.status(500).end()
       }
     case "POST":
-      const name = req.body.name
-
       try {
+        const { name } = req.body
+
         const course = await prisma.course.create({ data: { name } })
+
         return res.status(201).json(course)
       } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           console.log("code: ", e.code, "message: ", e.message)
-          return res.status(500).end()
         }
+        return res.status(500).end()
       }
+      break
     default:
       return res.status(405).end()
   }
