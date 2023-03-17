@@ -2,8 +2,8 @@ import { Course } from "@prisma/client"
 import { useRouter } from "next/router"
 import { GetServerSideProps } from "next"
 
-import fetcher from "@libs/fetcher"
 import usePublishedCourses from "@utils/useCourses"
+import fetcher from "@utils/fetcher"
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
   const baseURL = new URL("/api/courses?published=true", process.env.BASE_URL)
@@ -31,11 +31,13 @@ export default function Courses({ courses }: CoursesProps) {
   }
 
   async function handleCreateCourse() {
-    const course = await fetcher("/api/courses", {
+    const request = await fetcher("/api/courses", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: "Blank Course" })
     })
+
+    const course = await request.json()
 
     mutate([...data, course])
     handleEditCourse(course.id)
