@@ -1,17 +1,27 @@
 import { Course } from "@prisma/client"
 import { useRouter } from "next/router"
+import { GetServerSideProps } from "next"
 
 import fetcher from "@libs/fetcher"
 import usePublishedCourses from "@utils/useCourses"
 
-export default function Courses() {
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const baseURL = new URL("/api/courses?published=true", process.env.BASE_URL)
+  const response = await fetch(baseURL)
+
+  return {
+    props: { courses: await response.json() }
+  }
+}
+
+export type CoursesProps = {
+  courses: Course[]
+}
+
+export default function Courses({ courses }: CoursesProps) {
   const router = useRouter()
   // collect all unpublished course
-  const { data, error, isLoading, mutate } = usePublishedCourses<Course[]>(true)
-
-  if (isLoading) {
-    return <h1>loading...</h1>
-  }
+  const { data, mutate } = usePublishedCourses<Course[]>(true, courses)
 
   function handleEditCourse(cid: string) {
     router.push({
@@ -27,8 +37,8 @@ export default function Courses() {
       body: JSON.stringify({ name: "Blank Course" })
     })
 
-    handleEditCourse(course.id)
     mutate([...data, course])
+    handleEditCourse(course.id)
   }
 
   return (

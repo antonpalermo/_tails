@@ -1,20 +1,25 @@
 import { Course } from "@prisma/client"
-import usePublishedCourses from "@utils/useCourses"
 import { useRouter } from "next/router"
+import { GetServerSideProps } from "next"
 
-export default function Drafts() {
-  const router = useRouter()
-  const {
-    data: courses,
-    error,
-    isLoading,
-    mutate
-  } = usePublishedCourses<Course[]>(false)
+import usePublishedCourses from "@utils/useCourses"
 
-  if (isLoading) {
-    return <h1>Loading...</h1>
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const baseURL = new URL("/api/courses?published=true", process.env.BASE_URL)
+  const response = await fetch(baseURL)
+
+  return {
+    props: { courses: await response.json() }
   }
+}
 
+export type DraftsProps = {
+  courses: Course[]
+}
+
+export default function Drafts({ courses }: DraftsProps) {
+  const router = useRouter()
+  const { data, mutate } = usePublishedCourses<Course[]>(false, courses)
   function handleEditCourse(cid: string) {
     router.push({
       pathname: "/drafts/[cid]",
@@ -25,7 +30,7 @@ export default function Drafts() {
   return (
     <div>
       <h1>Drafts</h1>
-      {courses.map(course => (
+      {data.map(course => (
         <div key={course.id}>
           {JSON.stringify(course)}
           <button onClick={() => handleEditCourse(course.id)}>edit</button>
