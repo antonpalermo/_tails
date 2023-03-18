@@ -13,10 +13,24 @@ datasource db {
 model Course {
   id          String   @id @unique @default(cuid())
   name        String
+  docs        Doc[]
   published   Boolean  @default(false)
   dateCreated DateTime @default(now())
   dateUpdated DateTime @updatedAt
 
-  @@index([name])
+  @@index([id, name])
   @@map("courses")
+}
+
+model Doc {
+  id          String   @id @unique @default(cuid())
+  title       String
+  body        Json
+  dateCreated DateTime @default(now())
+  dateUpdated DateTime @updatedAt
+  course      Course?  @relation(fields: [courseId], references: [id])
+  courseId    String?
+
+  @@index([id])
+  @@map("docs")
 }
