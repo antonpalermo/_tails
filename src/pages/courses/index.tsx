@@ -5,12 +5,13 @@ import { GetServerSideProps } from "next"
 import usePublishedCourses from "@utils/useCourses"
 import fetcher from "@utils/fetcher"
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
-  const baseURL = new URL("/api/courses?published=true", process.env.BASE_URL)
-  const response = await fetch(baseURL)
+export const getServerSideProps: GetServerSideProps = async () => {
+  const { data: courses } = await fetcher<Course[]>(
+    "/api/courses?published=true"
+  )
 
   return {
-    props: { courses: await response.json() }
+    props: { courses }
   }
 }
 
@@ -31,13 +32,11 @@ export default function Courses({ courses }: CoursesProps) {
   }
 
   async function handleCreateCourse() {
-    const request = await fetcher("/api/courses", {
+    const { data: course } = await fetcher<Course>("/api/courses", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: "Blank Course" })
     })
-
-    const course = await request.json()
 
     mutate([...data, course])
     handleEditCourse(course.id)
@@ -50,6 +49,7 @@ export default function Courses({ courses }: CoursesProps) {
       {data.map(course => (
         <div key={course.id}>
           {JSON.stringify(course)}
+          {/* make sure that the course owner can edit */}
           <button onClick={() => handleEditCourse(course.id)}>edit</button>
         </div>
       ))}

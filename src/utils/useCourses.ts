@@ -1,4 +1,5 @@
 import useSWR from "swr"
+import fetcher from "@utils/fetcher"
 
 export default function usePublishedCourses<T>(
   published: boolean,
@@ -14,10 +15,16 @@ export default function usePublishedCourses<T>(
     url: string
     params: { published: boolean }
   }) {
-    const response = await fetch(
-      `${args.url}?published=${args.params.published}`
+    const { url, params } = args
+    const { data, error } = await fetcher<T>(
+      `${url}?published=${params.published}`
     )
-    return await response.json()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data
   }
 
   return { data, error, isLoading, mutate }

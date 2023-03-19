@@ -18,14 +18,16 @@ export default function EditCourseDetails({ course }: EditCourseDetailsProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  const request = await fetcher(`/api/courses/${ctx.query.cid}`)
+  const { data: course, error } = await fetcher<Course>(
+    `/api/courses/${ctx.query.cid}`
+  )
 
-  if (request.status === 404) {
+  if (error && error.code === 404) {
     return { notFound: true }
   }
 
   return {
-    props: { course: await request.json() }
+    props: { course }
   }
 }
 
