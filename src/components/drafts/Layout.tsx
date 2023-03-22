@@ -1,7 +1,10 @@
+import { useCourseDetails } from "@contexts/CourseDetails"
+import { Doc } from "@prisma/client"
+import fetcher from "@utils/fetcher"
 import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { HTMLAttributes } from "react"
+import { HTMLAttributes, useEffect, useState } from "react"
 
 export type LayoutProps = HTMLAttributes<HTMLDivElement> & {
   title?: string
@@ -9,6 +12,8 @@ export type LayoutProps = HTMLAttributes<HTMLDivElement> & {
 
 export default function Layout({ title, ...props }: LayoutProps) {
   const router = useRouter()
+  const [docs, setDocs] = useState<Pick<Doc, "id" | "title">[]>([])
+  const { selectedCourse } = useCourseDetails()
 
   function viewDoc(doc: string) {
     router.push({
@@ -24,6 +29,14 @@ export default function Layout({ title, ...props }: LayoutProps) {
     })
   }
 
+  useEffect(() => {
+    fetcher(`/api/courses/${selectedCourse}/docs`).then(({ data }) => {
+      if (data) {
+        setDocs(data as Pick<Doc, "id" | "title">[])
+      }
+    })
+  }, [])
+
   return (
     <div>
       <Head>
@@ -35,9 +48,14 @@ export default function Layout({ title, ...props }: LayoutProps) {
           details
         </button>
         <h2>docs</h2>
-        <button onClick={() => viewDoc("1")}>1</button>
-        <button onClick={() => viewDoc("2")}>2</button>
-        <button onClick={() => viewDoc("3")}>3</button>
+
+        {docs.map(doc => (
+          <div>
+            <button key={doc.id} onClick={() => viewDoc(doc.id)}>
+              {doc.title}
+            </button>
+          </div>
+        ))}
       </div>
       <div {...props} />
     </div>
