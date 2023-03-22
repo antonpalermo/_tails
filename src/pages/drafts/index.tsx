@@ -4,6 +4,7 @@ import { GetServerSideProps } from "next"
 
 import usePublishedCourses from "@utils/useCourses"
 import fetcher from "@utils/fetcher"
+import { useCourseDetails } from "@contexts/CourseDetails"
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
   const { data: courses } = await fetcher("/api/courses?published=false")
@@ -19,9 +20,11 @@ export type DraftsProps = {
 
 export default function Drafts({ courses }: DraftsProps) {
   const router = useRouter()
+  const { setSelectedCourse } = useCourseDetails()
   const { data } = usePublishedCourses<Course[]>(false, courses)
 
   function handleEditCourse(cid: string) {
+    setSelectedCourse(cid)
     router.push({
       pathname: "/drafts/[cid]",
       query: { cid }
