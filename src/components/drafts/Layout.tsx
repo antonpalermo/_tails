@@ -1,8 +1,7 @@
 import { useCourseDetails } from "@contexts/CourseDetails"
-import { Doc } from "@prisma/client"
+import { Doc, Prisma } from "@prisma/client"
 import fetcher from "@utils/fetcher"
 import Head from "next/head"
-import Link from "next/link"
 import { useRouter } from "next/router"
 import { HTMLAttributes, useEffect, useState } from "react"
 
@@ -10,9 +9,11 @@ export type LayoutProps = HTMLAttributes<HTMLDivElement> & {
   title?: string
 }
 
+type CourseDoc = Prisma.DocGetPayload<{ select: { title: true; id: true } }>
+
 export default function Layout({ title, ...props }: LayoutProps) {
   const router = useRouter()
-  const [docs, setDocs] = useState<Pick<Doc, "id" | "title">[]>([])
+  const [docs, setDocs] = useState<CourseDoc[]>([])
   const { selectedCourse } = useCourseDetails()
 
   function viewDoc(doc: string) {
@@ -30,11 +31,13 @@ export default function Layout({ title, ...props }: LayoutProps) {
   }
 
   useEffect(() => {
-    fetcher(`/api/courses/${selectedCourse}/docs`).then(({ data }) => {
-      if (data) {
-        setDocs(data as Pick<Doc, "id" | "title">[])
+    fetcher<CourseDoc[]>(`/api/courses/${selectedCourse}/docs`).then(
+      ({ data }) => {
+        if (data) {
+          setDocs(data)
+        }
       }
-    })
+    )
   }, [])
 
   return (
