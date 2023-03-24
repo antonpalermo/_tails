@@ -44,9 +44,7 @@ export default function Layout({ title, ...props }: LayoutProps) {
       </Head>
 
       <div>
-        <button onClick={() => viewDetails("clfbv49jp0000vjkg2gdcllz5")}>
-          details
-        </button>
+        <button onClick={() => viewDetails(selectedCourse)}>details</button>
         <h2>docs</h2>
 
         {docs.map(doc => (
