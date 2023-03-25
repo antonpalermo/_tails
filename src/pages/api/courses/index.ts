@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import prisma from "@libs/prisma"
+import prisma from "@utils/prisma"
 import { Prisma } from "@prisma/client"
 import parseBoolean from "@utils/parseBoolean"
 
