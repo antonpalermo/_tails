@@ -16,7 +16,10 @@ export default async function handler(
   switch (req.method) {
     case "GET":
       try {
-        const course = await prisma.course.findUniqueOrThrow({ where: { id } })
+        const course = await prisma.course.findUniqueOrThrow({
+          where: { id },
+          include: { docs: { select: { id: true, title: true } } }
+        })
         return res.status(200).json(course)
       } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
