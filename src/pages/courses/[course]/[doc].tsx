@@ -1,17 +1,16 @@
-import Layout from "@components/drafts/Layout"
 import { Doc } from "@prisma/client"
-import fetcher from "@utils/fetcher"
 import { GetServerSideProps } from "next"
-import { ReactElement } from "react"
 
-interface EditCourseDocsProps {
+import fetcher from "@utils/fetcher"
+
+interface DocumentDetailsProps {
   doc: Doc
 }
 
-export default function EditCourseDocs({ doc }: EditCourseDocsProps) {
+export default function DocumentDetails({ doc }: DocumentDetailsProps) {
   return (
     <div>
-      <h1>Edit Course Docs</h1>
+      <h1>Document Details</h1>
       {JSON.stringify(doc)}
     </div>
   )
@@ -19,17 +18,14 @@ export default function EditCourseDocs({ doc }: EditCourseDocsProps) {
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const id = query.doc
+
   const { data: doc, error } = await fetcher<Doc>(`/api/docs/${id}`)
 
-  if (error) {
+  if (error && error.code === 404) {
     return { notFound: true }
   }
 
   return {
     props: { doc }
   }
-}
-
-EditCourseDocs.pageLayout = function (page: ReactElement) {
-  return <Layout title="Edit Docs">{page}</Layout>
 }

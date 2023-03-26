@@ -1,17 +1,16 @@
-import Layout from "@components/drafts/Layout"
 import { Course } from "@prisma/client"
-import fetcher from "@utils/fetcher"
 import { GetServerSideProps } from "next"
-import { ReactElement } from "react"
 
-export type EditCourseDetailsProps = {
+import fetcher from "@utils/fetcher"
+
+interface CourseDetailsProps {
   course: Course
 }
 
-export default function EditCourseDetails({ course }: EditCourseDetailsProps) {
+export default function CourseDetails({ course }: CourseDetailsProps) {
   return (
     <div>
-      <h1>Edit Course Details</h1>
+      <h1>Course Details</h1>
       {JSON.stringify(course)}
     </div>
   )
@@ -29,9 +28,4 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   return {
     props: { course }
   }
-}
-
-EditCourseDetails.pageLayout = function (page: ReactElement) {
-  const { course } = page.props
-  return <Layout title={course.name}>{page}</Layout>
 }
