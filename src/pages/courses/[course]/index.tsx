@@ -2,18 +2,11 @@ import { Course } from "@prisma/client"
 import { GetServerSideProps } from "next"
 
 import fetcher from "@utils/fetcher"
+import { ReactElement } from "react"
+import Layout from "@components/course/Layout"
 
 interface CourseDetailsProps {
   course: Course
-}
-
-export default function CourseDetails({ course }: CourseDetailsProps) {
-  return (
-    <div>
-      <h1>Course Details</h1>
-      {JSON.stringify(course)}
-    </div>
-  )
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
@@ -28,4 +21,17 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   return {
     props: { course }
   }
+}
+
+export default function CourseDetails({ course }: CourseDetailsProps) {
+  return (
+    <div>
+      <h1>Course Details</h1>
+      {JSON.stringify(course)}
+    </div>
+  )
+}
+
+CourseDetails.pageLayout = function (page: ReactElement) {
+  return <Layout>{page}</Layout>
 }

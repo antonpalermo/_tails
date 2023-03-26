@@ -18,15 +18,14 @@ export default function Layout({ title, ...props }: LayoutProps) {
 
   function viewDoc(doc: string) {
     router.push({
-      pathname: `/drafts/[cid]/[doc]`,
+      pathname: `/courses/[course]/[doc]`,
       query: { ...router.query, doc }
     })
   }
 
-  function viewDetails(cid: string) {
+  function viewDetails(course: string) {
     router.push({
-      pathname: "/drafts/[cid]",
-      query: { cid }
+      pathname: `/courses/${course}`
     })
   }
 
@@ -38,6 +37,7 @@ export default function Layout({ title, ...props }: LayoutProps) {
         }
       }
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -51,7 +51,7 @@ export default function Layout({ title, ...props }: LayoutProps) {
         <h2>docs</h2>
 
         {docs.map(doc => (
-          <div>
+          <div key={doc.id}>
             <button key={doc.id} onClick={() => viewDoc(doc.id)}>
               {doc.title}
             </button>

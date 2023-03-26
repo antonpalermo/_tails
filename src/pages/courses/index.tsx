@@ -4,10 +4,11 @@ import { GetServerSideProps } from "next"
 
 import usePublishedCourses from "@utils/useCourses"
 import fetcher from "@utils/fetcher"
+import { useCourseDetails } from "@contexts/CourseDetails"
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const { data: courses } = await fetcher<Course[]>(
-    "/api/courses?published=true"
+    "/api/courses?published=false"
   )
 
   return {
@@ -21,13 +22,14 @@ export type CoursesProps = {
 
 export default function Courses({ courses }: CoursesProps) {
   const router = useRouter()
+  const { setSelectedCourse } = useCourseDetails()
   // collect all unpublished course
-  const { data, mutate } = usePublishedCourses<Course[]>(true, courses)
+  const { data, mutate } = usePublishedCourses<Course[]>(false, courses)
 
-  function handleEditCourse(cid: string) {
+  function handleEditCourse(courseId: string) {
+    setSelectedCourse(courseId)
     router.push({
-      pathname: "/drafts/[cid]",
-      query: { cid }
+      pathname: `/courses/${courseId}`
     })
   }
 

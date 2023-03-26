@@ -2,18 +2,11 @@ import { Doc } from "@prisma/client"
 import { GetServerSideProps } from "next"
 
 import fetcher from "@utils/fetcher"
+import Layout from "@components/course/Layout"
+import { ReactElement } from "react"
 
 interface DocumentDetailsProps {
   doc: Doc
-}
-
-export default function DocumentDetails({ doc }: DocumentDetailsProps) {
-  return (
-    <div>
-      <h1>Document Details</h1>
-      {JSON.stringify(doc)}
-    </div>
-  )
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
@@ -31,4 +24,17 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   return {
     props: { doc }
   }
+}
+
+export default function DocumentDetails({ doc }: DocumentDetailsProps) {
+  return (
+    <div>
+      <h1>Document Details</h1>
+      {JSON.stringify(doc)}
+    </div>
+  )
+}
+
+DocumentDetails.pageLayout = function (page: ReactElement) {
+  return <Layout>{page}</Layout>
 }
