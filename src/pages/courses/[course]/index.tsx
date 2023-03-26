@@ -18,7 +18,7 @@ export default function CourseDetails({ course }: CourseDetailsProps) {
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
   const { data: course, error } = await fetcher<Course>(
-    `/api/courses/${ctx.query.cid}`
+    `/api/courses/${ctx.query.course}`
   )
 
   if (error && error.code === 404) {

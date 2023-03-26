@@ -4,29 +4,34 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 interface IncomingAPIRequest extends Omit<NextApiRequest, "method" | "query"> {
   method: "GET"
-  query: { id: string }
+  query: { course: string; doc: string }
+  body: { cid: string; title: string; body: any }
 }
 
 export default async function handler(
   req: IncomingAPIRequest,
   res: NextApiResponse
 ) {
-  const { id } = req.query
+  const { course: courseId, doc: docId } = req.query
 
   switch (req.method) {
     case "GET":
       try {
-        const course = await prisma.course.findUniqueOrThrow({
-          where: { id },
-          include: { docs: { select: { id: true, title: true } } }
+        const doc = await prisma.doc.findFirst({
+          where: { AND: [{ courseId, id: docId }] }
         })
-        return res.status(200).json(course)
+
+        if (doc === null) {
+          return res.status(404).end()
+        }
+
+        return res.status(200).json(doc)
       } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
-          return res.status(404).json({ message: `${id} not found` })
+          console.log("code: ", e.code, "message: ", e.message)
         }
+        return res.status(500).end()
       }
-
     default:
       return res.status(405).end()
   }

@@ -17,9 +17,12 @@ export default function DocumentDetails({ doc }: DocumentDetailsProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const id = query.doc
+  const courseId = query.course
+  const docId = query.doc
 
-  const { data: doc, error } = await fetcher<Doc>(`/api/docs/${id}`)
+  const { data: doc, error } = await fetcher<Doc>(
+    `/api/courses/${courseId}/docs/${docId}`
+  )
 
   if (error && error.code === 404) {
     return { notFound: true }
