@@ -6,8 +6,6 @@ import { AppProps as NextAppProps } from "next/app"
 
 import "@styles/globals.css"
 
-import CourseDetailsProvider from "@contexts/CourseDetails"
-
 type PageLayout<P = {}, IP = P> = NextPage<P, IP> & {
   pageLayout?: (page: ReactElement) => ReactNode
 }
@@ -27,9 +25,7 @@ export default function MainApp({ Component, pageProps }: AppProps) {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <CourseDetailsProvider>
-        {getLayout(<Component {...pageProps} />)}
-      </CourseDetailsProvider>
+      {getLayout(<Component {...pageProps} />)}
     </>
   )
 }
