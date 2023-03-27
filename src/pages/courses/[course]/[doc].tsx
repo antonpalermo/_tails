@@ -4,6 +4,7 @@ import { GetServerSideProps } from "next"
 import fetcher from "@utils/fetcher"
 import Layout from "@components/course/Layout"
 import { ReactElement } from "react"
+import Editor from "@components/course/Editor"
 
 interface DocumentDetailsProps {
   doc: Doc
@@ -30,7 +31,7 @@ export default function DocumentDetails({ doc }: DocumentDetailsProps) {
   return (
     <div>
       <h1>Document Details</h1>
-      {JSON.stringify(doc)}
+      <Editor />
     </div>
   )
 }
