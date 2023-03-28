@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Doc {
+model Topic {
   id          String   @id @unique @default(cuid())
   title       String
   body        Json
@@ -18,5 +18,5 @@ model Doc {
   dateUpdated DateTime @updatedAt
 
   @@index([id])
-  @@map("docs")
+  @@map("topics")
 }
