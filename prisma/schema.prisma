@@ -11,12 +11,25 @@ datasource db {
 }
 
 model Topic {
-  id          String   @id @unique @default(cuid())
+  id          String    @id @unique @default(cuid())
   title       String
-  body        Json
+  slug        TopicSlug @relation(fields: [slugId], references: [id])
+  slugId      String    @unique
+  dateCreated DateTime  @default(now())
+  dateUpdated DateTime  @updatedAt
+
+  @@index([id])
+  @@map("topics")
+}
+
+model TopicSlug {
+  id          String   @id @unique @default(cuid())
+  raw         Json     @default("{ \"type\": \"doc\", \"content\": [] }")
+  slug        String
+  meta        Topic?
   dateCreated DateTime @default(now())
   dateUpdated DateTime @updatedAt
 
   @@index([id])
-  @@map("topics")
+  @@map("topic_slugs")
 }
