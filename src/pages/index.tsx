@@ -1,5 +1,6 @@
 import EditorContent from "@components/EditorContent"
 import { JSONContent } from "@tiptap/react"
+import fetcher from "@utils/fetcher"
 import React, { useReducer } from "react"
 
 interface HomeState {
@@ -28,7 +29,19 @@ export default function Home() {
   }
 
   async function handleSubmit() {
-    console.log(state.body)
+    const { data, error } = await fetcher("/api/topics", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ title: "sample title", body: state.body })
+    })
+
+    if (error && error.code === 405) {
+      console.log(error)
+    }
+
+    console.log(data)
   }
 
   return (
