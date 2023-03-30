@@ -6,7 +6,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { body } = req.body
+  const { title, slug } = req.body
 
   const allowedMethods = ["POST"]
 
@@ -19,8 +19,12 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const topic = await prisma.topic.create({
-        data: { title: "Default Title", body }
+        data: {
+          title,
+          slug: { create: { raw: slug, slug: JSON.stringify(slug) } }
+        }
       })
+
       return res.status(201).json(topic)
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {

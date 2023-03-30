@@ -1,28 +1,32 @@
 import EditorContent from "@components/EditorContent"
-import { JSONContent } from "@tiptap/react"
+import { Content } from "@tiptap/react"
 import fetcher from "@utils/fetcher"
 import React, { useReducer } from "react"
 
 interface HomeState {
-  body: JSONContent
+  title: string
+  slug: Content
 }
 
 interface HomeActions {
-  type: "SET_BODY"
+  type: "SET_CONTENT_SLUG" | "SET_CONTENT_TITLE"
   payload: any
 }
 
 export default function Home() {
   const initialState: HomeState = {
-    body: { type: "doc", content: [] }
+    title: "",
+    slug: { type: "doc", content: [] }
   }
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
   function reducer(state: HomeState, actions: HomeActions) {
     switch (actions.type) {
-      case "SET_BODY":
-        return { ...state, body: actions.payload }
+      case "SET_CONTENT_TITLE":
+        return { ...state, title: actions.payload }
+      case "SET_CONTENT_SLUG":
+        return { ...state, slug: actions.payload }
       default:
         return state
     }
@@ -34,24 +38,29 @@ export default function Home() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ title: "sample title", body: state.body })
+      body: JSON.stringify({ title: state.title, slug: state.slug })
     })
 
     if (error && error.code === 405) {
-      console.log(error)
     }
-
-    console.log(data)
   }
 
   return (
     <div>
       <h1>Editor</h1>
       <button onClick={handleSubmit}>Save</button>
-      {JSON.stringify(state.body)}
+      {JSON.stringify(state.slug)}
+      <input
+        type="text"
+        placeholder="title"
+        value={state.title}
+        onChange={e =>
+          dispatch({ type: "SET_CONTENT_TITLE", payload: e.target.value })
+        }
+      />
       <EditorContent
         onUpdate={({ editor }) =>
-          dispatch({ type: "SET_BODY", payload: editor.getJSON() })
+          dispatch({ type: "SET_CONTENT_SLUG", payload: editor.getJSON() })
         }
       />
     </div>
