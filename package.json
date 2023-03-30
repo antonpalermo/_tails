@@ -14,6 +14,8 @@
     "@heroicons/react": "^2.0.16",
     "@prisma/client": "^4.11.0",
     "@tailwindcss/container-queries": "^0.1.0",
+    "@tiptap/extension-document": "^2.0.1",
+    "@tiptap/extension-placeholder": "^2.0.1",
     "@tiptap/pm": "^2.0.0-beta.220",
     "@tiptap/react": "^2.0.0-beta.220",
     "@tiptap/starter-kit": "^2.0.0-beta.220",

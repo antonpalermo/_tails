@@ -49,15 +49,6 @@ export default function Home() {
     <div>
       <h1>Editor</h1>
       <button onClick={handleSubmit}>Save</button>
-      {JSON.stringify(state.slug)}
-      <input
-        type="text"
-        placeholder="title"
-        value={state.title}
-        onChange={e =>
-          dispatch({ type: "SET_CONTENT_TITLE", payload: e.target.value })
-        }
-      />
       <EditorContent
         onUpdate={({ editor }) =>
           dispatch({ type: "SET_CONTENT_SLUG", payload: editor.getJSON() })
