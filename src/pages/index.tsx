@@ -4,18 +4,16 @@ import fetcher from "@utils/fetcher"
 import React, { useReducer } from "react"
 
 interface HomeState {
-  title: string
   slug: Content
 }
 
 interface HomeActions {
-  type: "SET_CONTENT_SLUG" | "SET_CONTENT_TITLE"
+  type: "SET_CONTENT_SLUG"
   payload: any
 }
 
 export default function Home() {
   const initialState: HomeState = {
-    title: "",
     slug: { type: "doc", content: [] }
   }
 
@@ -23,8 +21,6 @@ export default function Home() {
 
   function reducer(state: HomeState, actions: HomeActions) {
     switch (actions.type) {
-      case "SET_CONTENT_TITLE":
-        return { ...state, title: actions.payload }
       case "SET_CONTENT_SLUG":
         return { ...state, slug: actions.payload }
       default:
@@ -49,7 +45,6 @@ export default function Home() {
     <div>
       <h1>Editor</h1>
       <button onClick={handleSubmit}>Save</button>
-      {JSON.stringify(state)}
       <EditorContent
         onUpdate={({ editor }) =>
           dispatch({ type: "SET_CONTENT_SLUG", payload: editor.getJSON() })
