@@ -10,6 +10,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Course {
+  id          String  @id @unique @default(cuid())
+  name        String
+  description String?
+
+  @@map("courses")
+}
+
 model Topic {
   id          String    @id @unique @default(cuid())
   title       String
