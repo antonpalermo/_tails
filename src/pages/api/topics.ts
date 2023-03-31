@@ -6,7 +6,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { title, slug } = req.body
+  const { slug } = req.body
 
   const allowedMethods = ["POST"]
 
@@ -20,7 +20,7 @@ export default async function handler(
     try {
       const topic = await prisma.topic.create({
         data: {
-          title,
+          title: slug.content[0].content[0].text,
           slug: { create: { raw: slug, slug: JSON.stringify(slug) } }
         }
       })

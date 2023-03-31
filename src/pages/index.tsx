@@ -38,7 +38,7 @@ export default function Home() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ title: state.title, slug: state.slug })
+      body: JSON.stringify({ slug: state.slug })
     })
 
     if (error && error.code === 405) {
@@ -49,6 +49,7 @@ export default function Home() {
     <div>
       <h1>Editor</h1>
       <button onClick={handleSubmit}>Save</button>
+      {JSON.stringify(state)}
       <EditorContent
         onUpdate={({ editor }) =>
           dispatch({ type: "SET_CONTENT_SLUG", payload: editor.getJSON() })

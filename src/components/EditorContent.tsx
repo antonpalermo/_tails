@@ -35,6 +35,11 @@ export default function EditorContent({
         }
       })
     ],
+    editorProps: {
+      attributes: {
+        class: "prose prose-sm sm:prose mx-auto focus:outline-none"
+      }
+    },
     onUpdate
   })
 
