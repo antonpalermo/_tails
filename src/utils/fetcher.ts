@@ -10,11 +10,7 @@ async function fetcher<T>(
 
   const request = await fetch(baseURL, options)
 
-  if (!request.ok) {
-    return { error: { code: request.status, message: request.statusText } }
-  }
-
-  return { data: (await request.json()) as T, error: undefined }
+  return { data: (await request.json()) as T }
 }
 
 export default fetcher
