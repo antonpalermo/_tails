@@ -1,3 +1,9 @@
+import { Button } from "@/components/ui/button"
+
 export default function RootPage() {
-  return <h1>React App</h1>
+  return (
+    <div className="p-10">
+      <Button>Sample</Button>
+    </div>
+  )
 }

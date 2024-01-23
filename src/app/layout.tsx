@@ -11,7 +11,8 @@ import { headers } from "next/headers"
 
 const inter = Inter({
   subsets: ["latin"],
-  display: "swap"
+  display: "swap",
+  variable: "--font-inter-sans"
 })
 
 export default async function RootLayout({
