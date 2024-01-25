@@ -4,6 +4,7 @@ export default async function RootPage() {
   return (
     <div className="">
       <Button>Sample</Button>
+      <div className="h-screen"></div>
     </div>
   )
 }
