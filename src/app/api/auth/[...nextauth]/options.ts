@@ -6,6 +6,10 @@ import GoogleProvider from "next-auth/providers/google"
 
 const options: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  session: {
+    maxAge: 1000 * 60 * 60 * 24,
+    strategy: "jwt"
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
