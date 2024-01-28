@@ -1,4 +1,9 @@
 import ChannelForm from "@/app/(channels)/_components/channel-form"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Create new channel"
+}
 
 export default function ChannelsCreatePage() {
   return (

@@ -92,3 +92,14 @@ model TopicSlug {
   @@index([id])
   @@map("topic_slugs")
 }
+
+model Channel {
+  id          String   @id @unique @default(uuid())
+  name        String
+  description String?
+  dateCreated DateTime @default(now())
+  dateUpdated DateTime @updatedAt
+
+  @@index([id])
+  @@map("channels")
+}
