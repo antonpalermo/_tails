@@ -1,5 +1,7 @@
 "use client"
 
+import axios from "axios"
+
 import { useForm } from "react-hook-form"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -35,7 +37,7 @@ export default function ChannelForm() {
   })
 
   async function onSubmit(values: z.infer<typeof schema>) {
-    console.log(values)
+    const response = await axios.post("/api/channels", values)
   }
 
   return (
