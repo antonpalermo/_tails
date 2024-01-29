@@ -8,6 +8,7 @@ import options from "@/app/api/auth/[...nextauth]/options"
 import SessionProvider from "@/lib/providers/session"
 import { redirect, usePathname } from "next/navigation"
 import { headers } from "next/headers"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,7 +33,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <SessionProvider session={session}>
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          {children}
+          <Toaster />
+        </body>
       </SessionProvider>
     </html>
   )

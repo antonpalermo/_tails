@@ -19,6 +19,7 @@ import { z } from "zod"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { useToast } from "@/components/ui/use-toast"
 
 const schema = z.object({
   name: z.string(),
@@ -26,6 +27,8 @@ const schema = z.object({
 })
 
 export default function ChannelForm() {
+  const { toast } = useToast()
+
   const defaultValues: z.infer<typeof schema> = {
     name: "",
     description: ""
@@ -38,6 +41,10 @@ export default function ChannelForm() {
 
   async function onSubmit(values: z.infer<typeof schema>) {
     const response = await axios.post("/api/channels", values)
+    toast({
+      title: "Horay!",
+      description: `Room ${values.name} successfully created`
+    })
   }
 
   return (
