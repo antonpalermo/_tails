@@ -1,10 +1,8 @@
 "use client"
 
 import axios from "axios"
-
 import { useForm } from "react-hook-form"
 
-import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Form,
   FormItem,
@@ -14,32 +12,24 @@ import {
   FormDescription,
   FormMessage
 } from "@/components/ui/form"
-
-import { z } from "zod"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
 
-const schema = z.object({
-  name: z.string(),
-  description: z.string()
-})
+type FormSchema = {
+  name: string
+  description: string
+}
 
 export default function ChannelForm() {
   const { toast } = useToast()
 
-  const defaultValues: z.infer<typeof schema> = {
-    name: "",
-    description: ""
-  }
-
-  const form = useForm<z.infer<typeof schema>>({
-    defaultValues,
-    resolver: zodResolver(schema)
+  const form = useForm<FormSchema>({
+    defaultValues: { name: "", description: "" }
   })
 
-  async function onSubmit(values: z.infer<typeof schema>) {
+  async function onSubmit(values: FormSchema) {
     const response = await axios.post("/api/channels", values)
     toast({
       title: "Horay!",
