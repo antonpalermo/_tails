@@ -3,12 +3,17 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 
 import prisma from "@/lib/prisma"
-import errors from "@/lib/errors"
+import errors, { toErrorMap } from "@/lib/errors"
 import options from "../auth/[...nextauth]/options"
 import { Prisma } from "@prisma/client"
 
 const schema = z.object({
-  name: z.string(),
+  name: z
+    .string()
+    .refine(data => data.trim() !== "", { message: "Name is required" })
+    .refine(data => data.length >= 3 || data.trim() === "", {
+      message: "Name must be at least 3 characters long"
+    }),
   description: z.string()
 })
 
@@ -20,18 +25,18 @@ export async function POST(req: Request) {
   }
 
   const user = session.user
-  const cleanSchema = schema.safeParse(await req.json())
+  const validatedSchema = schema.safeParse(await req.json())
 
-  if (!cleanSchema.success) {
+  if (!validatedSchema.success) {
     return NextResponse.json(
-      { errors: cleanSchema.error.flatten().fieldErrors },
+      { errors: toErrorMap(validatedSchema.error) },
       { status: 400 }
     )
   }
 
   try {
     const channel = await prisma.channel.create({
-      data: { ...cleanSchema.data }
+      data: { ...validatedSchema.data }
     })
 
     return NextResponse.json(channel, { status: 201 })
@@ -40,8 +45,15 @@ export async function POST(req: Request) {
       // check if the error is related unique constrains
       if (error.code === "P2002") {
         return NextResponse.json(
-          { errors: `${cleanSchema.data.name} is already taken.` },
-          { status: 405 }
+          {
+            errors: [
+              {
+                field: "name",
+                message: `${validatedSchema.data.name} is already taken.`
+              }
+            ]
+          },
+          { status: 400 }
         )
       }
     }

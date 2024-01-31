@@ -1,6 +1,6 @@
 "use client"
 
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { useForm } from "react-hook-form"
 
 import {
@@ -9,7 +9,6 @@ import {
   FormLabel,
   FormField,
   FormControl,
-  FormDescription,
   FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -30,11 +29,19 @@ export default function ChannelForm() {
   })
 
   async function onSubmit(values: FormSchema) {
-    const response = await axios.post("/api/channels", values)
-    toast({
-      title: "Horay!",
-      description: `Room ${values.name} successfully created`
-    })
+    try {
+      await axios.post("/api/channels", values)
+
+      toast({
+        title: "Horay!",
+        description: `Room ${values.name} successfully created`
+      })
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        const errors = e.response?.data.errors
+        errors.map((e: any) => form.setError(e.field, { message: e.message }))
+      }
+    }
   }
 
   return (
@@ -49,7 +56,6 @@ export default function ChannelForm() {
               <FormControl>
                 <Input placeholder="My channel" {...field} />
               </FormControl>
-              <FormDescription>Desired channel name</FormDescription>
               <FormMessage />
             </FormItem>
           )}
