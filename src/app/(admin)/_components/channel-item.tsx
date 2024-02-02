@@ -8,7 +8,7 @@ interface ChannelItemProps {
 
 export default function ChannelItem({ href, label }: ChannelItemProps) {
   return (
-    <Link href={href} passHref>
+    <Link href={href} passHref className="block">
       <Button variant={"link"}>{label}</Button>
     </Link>
   )

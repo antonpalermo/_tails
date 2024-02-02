@@ -1,12 +1,17 @@
 import Image from "next/image"
 
-import Routes from "@/app/(admin)/_components/routes"
-import { Button } from "@/components/ui/button"
-import { PlusIcon } from "lucide-react"
-import Channels from "./channels"
+import prisma from "@/lib/prisma"
 
-export default function Sidebar() {
-  const routes = [{ label: "sample", href: "/sample" }]
+import Routes from "@/app/(admin)/_components/routes"
+import Channels from "@/app/(admin)/_components/channels"
+
+export default async function Sidebar() {
+  // const routes = [{ label: "sample", href: "/sample" }]
+  const channel = await prisma.channel.findMany()
+  const routes = channel.map(e => ({
+    label: e.name,
+    href: `/channels/${e.id}`
+  }))
 
   return (
     <nav className="w-80 md:w-60 h-full border-r px-2">
