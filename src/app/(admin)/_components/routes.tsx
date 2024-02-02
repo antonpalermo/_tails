@@ -10,7 +10,12 @@ export default function Routes() {
   return (
     <div>
       {routes.map(route => (
-        <RouteItem icon={route.icon} label={route.label} href={route.href} />
+        <RouteItem
+          key={route.label}
+          icon={route.icon}
+          label={route.label}
+          href={route.href}
+        />
       ))}
     </div>
   )
