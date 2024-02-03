@@ -6,7 +6,6 @@ import Routes from "@/app/(admin)/_components/routes"
 import Channels from "@/app/(admin)/_components/channels"
 
 export default async function Sidebar() {
-  // const routes = [{ label: "sample", href: "/sample" }]
   const channel = await prisma.channel.findMany()
   const routes = channel.map(e => ({
     label: e.name,

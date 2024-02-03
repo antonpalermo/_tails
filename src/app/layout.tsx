@@ -9,12 +9,20 @@ import SessionProvider from "@/lib/providers/session"
 import { redirect, usePathname } from "next/navigation"
 import { headers } from "next/headers"
 import { Toaster } from "@/components/ui/toaster"
+import { Metadata } from "next"
 
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter-sans"
 })
+
+export const metadata: Metadata = {
+  title: {
+    template: "_tails - %s",
+    default: "_tails"
+  }
+}
 
 export default async function RootLayout({
   children
