@@ -36,7 +36,18 @@ export async function POST(req: Request) {
 
   try {
     const channel = await prisma.channel.create({
-      data: { ...validatedSchema.data }
+      data: {
+        name: validatedSchema.data.name,
+        description: validatedSchema.data.description,
+        members: {
+          create: {
+            name: user?.name!,
+            email: user?.email!,
+            image: user?.image!,
+            role: "admin"
+          }
+        }
+      }
     })
 
     return NextResponse.json(channel, { status: 201 })
