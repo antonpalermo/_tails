@@ -13,10 +13,29 @@ datasource db {
 model Channel {
   id          String   @id @unique @default(uuid())
   name        String   @unique
+  members     Member[]
   description String?
   dateCreated DateTime @default(now())
   dateUpdated DateTime @updatedAt
 
   @@index([id])
   @@map("channels")
+}
+
+enum Role {
+  admin
+  member
+}
+
+model Member {
+  id        String   @id @unique @default(uuid())
+  name      String
+  email     String
+  image     String
+  role      Role
+  channel   Channel? @relation(fields: [channelId], references: [id])
+  channelId String?
+
+  @@index([email])
+  @@map("members")
 }
