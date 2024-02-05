@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from "next/navigation"
 
 type FormSchema = {
   name: string
@@ -23,6 +24,7 @@ type FormSchema = {
 
 export default function ChannelForm() {
   const { toast } = useToast()
+  const router = useRouter()
 
   const form = useForm<FormSchema>({
     defaultValues: { name: "", description: "" }
@@ -30,7 +32,9 @@ export default function ChannelForm() {
 
   async function onSubmit(values: FormSchema) {
     try {
-      await axios.post("/api/channels", values)
+      const request = await axios.post("/api/channels", values)
+
+      router.push(`/channels/${request.data.id}`)
 
       toast({
         title: "Horay!",
